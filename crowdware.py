@@ -25,7 +25,9 @@ import bcrypt
 import hashlib
 from email.mime.text import MIMEText
 import mysql.connector
-
+from crowdware_keys import CROWDWARE_DB_PWD
+from crowdware_keys import CROWDWARE_DB_USER
+from crowdware_keys import CROWDWARE_DATABASE
 
 app = Flask(__name__)
 
@@ -33,3 +35,42 @@ app = Flask(__name__)
 def home():
     print("Welcome to crowdware")
     return "Welcome to crowdware"
+
+def get_db_connection():
+    return mysql.connector.connect(
+        host="artanidos.mysql.pythonanywhere-services.com",
+        user=CROWDWARE_DB_USER,
+        password=CROWDWARE_DB_PWD,
+        database=CROWDWARE_DATABASE
+    )
+
+@app.route('/items', methods=['GET'])
+def get_items():
+    item_type = request.args.get('type')
+    if not item_type:
+        return jsonify({'error': 'Missing required parameter: type'}), 400
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        query = """
+            SELECT item.uuid, item.type, item.name, item.description, item.locale,
+                   item.date, item.url, account.publisher
+            FROM item
+            JOIN account ON item.account = account.uuid
+            WHERE item.type = %s
+        """
+        cursor.execute(query, (item_type,))
+        items = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
+
+        for item in items:
+            if item['date']:
+                item['date'] = item['date'].isoformat()
+        return jsonify(items)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
