@@ -1,12 +1,15 @@
 from flask import Flask
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
-from crowdfund import app  as crowdfund_app
-
+from stripe_checkout import app as stripe_app # Import der ersten Flask-App
+from nocode import app  as nocode_app # Import der zweiten Flask-App
+from crowdware import app  as crowdware_app
 app = Flask(__name__)
 
 # Dispatcher für mehrere Flask-Apps
 application = DispatcherMiddleware(app, {
-    '/crowdfund': crowdfund_app
+    '/stripe': stripe_app,
+    '/nocode': nocode_app,
+    '/crowdware': crowdware_app
 })
 
 @app.route('/')

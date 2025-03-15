@@ -1,4 +1,3 @@
-#############################################################################
 # Copyright (C) 2025 CrowdWare
 #
 # This file is part of CrowdWareService.
@@ -30,7 +29,7 @@ import mysql.connector
 
 app = Flask(__name__)
 
-@app.route('/crowdfund', methods=['GET'])
+@app.route('/crowdware', methods=['GET'])
 def home():
-    print("Welcome to crowdfund")
-    return "Welcome to crowdfund"
+    print("Welcome to crowdware")
+    return "Welcome to crowdware"

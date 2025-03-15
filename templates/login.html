@@ -1,0 +1,75 @@
+
+
+<script>
+    function validateEmail() {
+        var email = document.getElementById("email").value;
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var button = document.getElementById("verify-btn");
+
+        if (emailRegex.test(email)) {
+            button.disabled = false;
+        } else {
+            button.disabled = true;
+        }
+    }
+
+    function validatePassword() {
+        var password = document.getElementById("pwd").value;
+        var passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        var pwdField = document.getElementById("pwd");
+
+        if (!passwordRegex.test(password)) {
+            pwdField.setCustomValidity("Das Passwort muss mindestens 8 Charactere lang sein, 1 Großbuchstaben, 1 Nummer, und 1 spezial Charakter enthalten.");
+        } else {
+            pwdField.setCustomValidity("");
+        }
+    }
+</script>
+
+
+
+<section class="container">
+<div class="row">
+<div class="col-md-3">
+</div>
+<div class="col-md-6">
+
+<div class="white-row">
+<h2 class="text-center">Login</h2>
+<p>
+    Logge Dich bitte ein um das Webinar über Sacred Sexuality nutzen zu können.
+</p>
+
+<form id="login-form" action="https://artanidos.pythonanywhere.com/nocode/login" method="POST">
+<input type="hidden" id="locale" name="locale" value="en">
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="text" class="form-control" id="email" name="email" required onkeyup="validateEmail()">
+        </div>
+    </div>
+</div>
+
+
+<div class="row mt-3">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="pwd">Passwort:</label>
+            <input type="password" class="form-control" id="pwd" name="pwd" required onkeyup="validatePassword()">
+        </div>
+    </div>
+</div>
+
+<button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
+<p class="text-center mt-3">
+    Hast Du keinen Account? <a id="register-link" href="register.html">Registrier Dich hier</a>
+</p>
+</form>
+</div>
+
+<div class="col-md-3">
+</div>
+</div>
+</section>
