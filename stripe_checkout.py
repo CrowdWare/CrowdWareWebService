@@ -47,11 +47,6 @@ stripe.api_key = STRIPE_API_KEY
 app.url_map.strict_slashes = False
 
 
-@app.route('/', methods=['GET'])
-def home():
-    print("Welcome to stripe")
-    return "Welcome to stripe"
-
 def save_account_record(email, publisher, locale, license):
     """Function to save account details in MySQL database"""
     try:
@@ -98,7 +93,7 @@ def generate_license_key(license, publisher):
         return ""
 
 
-@app.route('/checkout', methods=['GET'])
+@app.route('/', methods=['GET'])
 def home():
     print("Welcome to stripe")
     return "Welcome to stripe"
