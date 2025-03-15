@@ -29,7 +29,7 @@ import mysql.connector
 
 app = Flask(__name__)
 
-@app.route('/crowdware', methods=['GET'])
+@app.route('/', methods=['GET'])
 def home():
     print("Welcome to crowdware")
     return "Welcome to crowdware"

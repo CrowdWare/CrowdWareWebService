@@ -3,6 +3,7 @@ from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from stripe_checkout import app as stripe_app # Import der ersten Flask-App
 from nocode import app  as nocode_app # Import der zweiten Flask-App
 from crowdware import app  as crowdware_app
+
 app = Flask(__name__)
 
 # Dispatcher für mehrere Flask-Apps
