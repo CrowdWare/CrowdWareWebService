@@ -47,6 +47,10 @@ def get_db_connection():
 @app.route('/items', methods=['GET'])
 def get_items():
     item_type = request.args.get('type')
+    filter_param = request.args.get('filter')
+    uuid_list = request.args.getlist('uuid')
+    exclude_list_raw = request.args.getlist('exclude')
+
     if not item_type:
         return jsonify({'error': 'Missing required parameter: type'}), 400
 
@@ -56,20 +60,45 @@ def get_items():
 
         query = """
             SELECT item.uuid, item.type, item.name, item.description, item.locale,
-                   item.date, item.url, account.publisher
+                   item.date, item.url, item.pictureurl, account.publisher
             FROM item
             JOIN account ON item.account = account.uuid
             WHERE item.type = %s
         """
-        cursor.execute(query, (item_type,))
+        params = [item_type]
+
+        # ✅ Nur bestimmte UUIDs laden
+        if uuid_list:
+            placeholders = ','.join(['%s'] * len(uuid_list))
+            query += f" AND item.uuid IN ({placeholders})"
+            params.extend(uuid_list)
+
+        # ✅ Bestimmte UUIDs ausschließen (z. B. via notInList)
+        excluded_uuids = []
+        for e in exclude_list_raw:
+            if e.startswith("uuid:"):
+                excluded_uuids.append(e.split(":", 1)[1])
+
+        if excluded_uuids:
+            placeholders = ','.join(['%s'] * len(excluded_uuids))
+            query += f" AND item.uuid NOT IN ({placeholders})"
+            params.extend(excluded_uuids)
+
+        # ✅ Optionaler Zusatzfilter
+        if filter_param == "new":
+            query += " ORDER BY item.date DESC LIMIT 3"
+
+        cursor.execute(query, tuple(params))
         items = cursor.fetchall()
 
         cursor.close()
         conn.close()
 
+        # Formatierung der Datum-Felder
         for item in items:
             if item['date']:
                 item['date'] = item['date'].isoformat()
+
         return jsonify(items)
 
     except Exception as e:
