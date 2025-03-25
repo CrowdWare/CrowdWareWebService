@@ -3,7 +3,7 @@ This is only temporary.
 We should switch to SmartContracts one day or the other. Solidity is not that hard to code and we might use Mumbai fro free.
 
 ## CrowdWare
-Thi app is ment for crowdfunding with CrowdWare 
+This app is ment for crowdfunding with CrowdWare 
 
 ## Stripe
 We install a hook for stripe with the stripe_app.
