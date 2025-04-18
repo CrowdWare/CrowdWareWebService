@@ -65,9 +65,14 @@ def get_items():
                    item.date, item.url, item.pictureurl, account.publisher
             FROM item
             JOIN account ON item.account = account.uuid
-            WHERE item.type = %s AND item.locale = %s
+            WHERE item.type = %s
         """
-        params = [item_type, item_locale]
+        params = [item_type]
+
+        # optionales locale nur anhängen, wenn gesetzt
+        if item_locale:
+            query += " AND item.locale = %s"
+            params.append(item_locale)
 
         # ✅ Nur bestimmte UUIDs laden
         if uuid_list:
