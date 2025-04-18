@@ -91,9 +91,8 @@ def get_items():
             query += f" AND item.uuid NOT IN ({placeholders})"
             params.extend(excluded_uuids)
 
-        # ✅ Optionaler Zusatzfilter
-        if filter_param == "new":
-            query += " ORDER BY item.date DESC LIMIT 3"
+
+        query += " ORDER BY item.date DESC"
 
         cursor.execute(query, tuple(params))
         items = cursor.fetchall()
